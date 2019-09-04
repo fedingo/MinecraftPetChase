@@ -23,14 +23,16 @@ def state_processor(state):
 
     state = np.concatenate([pl0, pl1, state[:,:,1:]], axis = -1) #, x_map, y_map
 
+    state = np.transpose(state, axes=[2, 1, 0])
+
     return state
 
 def swap_state(state):
 
-    pl0 = state[:, :, 1:2]
-    pl1 = state[:, :, 0:1]
+    pl0 = state[1:2]
+    pl1 = state[0:1]
 
-    state = np.concatenate([pl0, pl1, state[:, :, 2:]], axis=-1)
+    state = np.concatenate([pl0, pl1, state[2:]], axis=0)
 
     return state
 

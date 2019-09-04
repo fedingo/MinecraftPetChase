@@ -2,7 +2,7 @@ import os
 import time
 import random
 import numpy as np
-
+import sys
 import pygame
 
 
@@ -109,15 +109,17 @@ class Minecraft_Env:
                 if col == '+':
                     self.objects += [[i, j]]
                     continue
-                if col == 'p':
-                    self.spawn_locations += [[i, j]]
-                    continue
-                if col == 'a':
-                    self.pet_locations += [[i, j]]
-                    continue
+                # if col == 'p':
+                #     self.spawn_locations += [[i, j]]
+                #     continue
+                # if col == 'a':
+                #     self.pet_locations += [[i, j]]
+                #     continue
                 if col == 'x':
                     self.exits += [[i, j]]
                     continue
+                if col == '.':
+                    self.spawn_locations += [[i, j]]
 
     def init(self):
         """ Resets the environment, respawning agents and resetting state as well as collision matrix.
@@ -134,14 +136,18 @@ class Minecraft_Env:
         self.state = np.zeros((4, self.height, self.width))
         self.collision_matrix = np.zeros((self.height, self.width))
 
+        positions = random.sample(self.spawn_locations, 3)
+        pet_location = positions[:1]
+        agent_location = positions[1:]
+
         # Respawn all players at layout spawn points
         self.agents = []
-        for _, location in enumerate(self.spawn_locations):
+        for _, location in enumerate(agent_location):
             self.agents += [Agent(y=location[0], x=location[1],
                                   type=0, idx=len(self.agents) + 1)]
 
         # Respawn all animals at layout spawn points
-        for _, location in enumerate(self.pet_locations):
+        for _, location in enumerate(pet_location):
             self.agents += [Agent(y=location[0], x=location[1],
                                   type=1, idx=len(self.agents) + 1)]
 
@@ -303,17 +309,15 @@ class Minecraft_Env:
 
 
 if __name__ == '__main__':
-    layout = ['............',
-              '..++++++++++',
-              '..+p.......+',
-              '.++...+.+..+',
-              '.+x...p....+',
-              '.++......+.+',
-              '..++.......+',
-              '..+..+.+.a.+',
-              '..++x+++++++',
-              '...+++......',
-              '............']
+    layout = ['++++++++++++',
+              '+++........+',
+              '+++...+.+..+',
+              '++x........+',
+              '+++......+.+',
+              '+++........+',
+              '+++........+',
+              '++++x+++++++',
+              '++++++++++++']
 
     env = Minecraft_Env(layout=layout)
     state = env.init()
