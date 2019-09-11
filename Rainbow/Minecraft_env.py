@@ -97,7 +97,7 @@ class Minecraft_Env:
         self.width = len(layout[0])
         self.height = len(layout)
 
-        pygame.init()
+        #pygame.init()
         self.screen = None
 
         self.objects = []
@@ -346,7 +346,8 @@ if __name__ == '__main__':
             # state, reward, done = env.step(actions=[action_0,action_1])
             state, reward, done = env.step()
 
-            env.render_cool(goal)
+            # env.render_cool(goal)
+            env.render()
             time.sleep(0.5)
 
         if reward > 0:
