@@ -25,7 +25,12 @@ class Env():
   def __init__(self, args):
     self.device = args.device
 
-    self.env = Minecraft_Env(layout)
+    print(args.game)
+
+    if args.game == "1_player":
+      self.env = Minecraft_Env(layout, single_player=True)
+    else:
+      self.env = Minecraft_Env(layout, single_player=False)
     actions = ACTIONS
 
     self.actions = dict([i, e] for i, e in zip(range(len(actions)), actions))

@@ -88,9 +88,11 @@ class Agent:
 
 class Minecraft_Env:
 
-    def __init__(self, layout):
+    def __init__(self, layout, single_player=False):
         self.max_steps = 50
         self.tile_set = np.array(['.', 'p', 'a', 'x', '+'])
+
+        self.single_player = single_player
 
         self.width = len(layout[0])
         self.height = len(layout)
@@ -138,7 +140,10 @@ class Minecraft_Env:
 
         positions = random.sample(self.spawn_locations, 3)
         pet_location = positions[:1]
-        agent_location = positions[1:]
+        if self.single_player:
+            agent_location = positions[-1:]
+        else:
+            agent_location = positions[1:]
 
         # Respawn all players at layout spawn points
         self.agents = []
@@ -230,7 +235,12 @@ class Minecraft_Env:
         vertical_caught = np.sum(players[0:2]) >= 2
         horizontal_caught = np.sum(players[2:4]) >= 2
 
-        animal_caught = vertical_caught or horizontal_caught
+        single_player_caught = np.sum(players) >= 1
+
+        if self.single_player:
+            animal_caught = single_player_caught
+        else:
+            animal_caught = vertical_caught or horizontal_caught
 
         # If an exit state is reached, administers reward, otherwise applies
         # penalty
@@ -319,7 +329,7 @@ if __name__ == '__main__':
               '++++o+++++++',
               '++++++++++++']
 
-    env = Minecraft_Env(layout=layout)
+    env = Minecraft_Env(layout=layout, single_player=True)
     state = env.init()
     done = False
 
