@@ -49,6 +49,8 @@ parser.add_argument('--evaluation-episodes', type=int, default=100, metavar='N',
 parser.add_argument('--evaluation-size', type=int, default=500, metavar='N', help='Number of transitions to use for validating Q')
 parser.add_argument('--render', default=False, action='store_true', help='Display screen (testing only)')
 parser.add_argument('--enable-cudnn', action='store_true', help='Enable cuDNN (faster but nondeterministic)')
+parser.add_argument('--env-size', type=int, default=8, help='Dimensions of the environment')
+
 
 
 # Setup

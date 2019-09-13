@@ -25,12 +25,26 @@ class Env():
   def __init__(self, args):
     self.device = args.device
 
-    print(args.game)
+    dim =args.env_size
+
+    wall = '+'*dim
+    free = [['.' for _ in range(dim-2)] for _ in range(dim-2)]
+    free[0][0] = 'o'
+    free[-1][0] = 'o'
+    free[0][-1] = 'o'
+    free[-1][-1] = 'o'
+
+    map = ['+' + "".join(row) + '+' for row in free]
+    map.insert(0, wall)
+    map.append(wall)
+
+    for row in map:
+      print(row)
 
     if args.game == "1_player":
-      self.env = Minecraft_Env(layout, single_player=True)
+      self.env = Minecraft_Env(map, single_player=True)
     else:
-      self.env = Minecraft_Env(layout, single_player=False)
+      self.env = Minecraft_Env(map, single_player=False)
     actions = ACTIONS
 
     self.actions = dict([i, e] for i, e in zip(range(len(actions)), actions))

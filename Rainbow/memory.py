@@ -65,6 +65,7 @@ class SegmentTree():
 
 class ReplayMemory():
   def __init__(self, args, capacity):
+    self.blank_trans = Transition(0, torch.zeros(5, args.env_size, args.env_size, dtype=torch.uint8), None, 0, False)
     self.device = args.device
     self.capacity = capacity
     self.history = args.history_length
@@ -87,14 +88,14 @@ class ReplayMemory():
     transition[self.history - 1] = self.transitions.get(idx)
     for t in range(self.history - 2, -1, -1):  # e.g. 2 1 0
       if transition[t + 1].timestep == 0:
-        transition[t] = blank_trans  # If future frame has timestep 0
+        transition[t] = self.blank_trans  # If future frame has timestep 0
       else:
         transition[t] = self.transitions.get(idx - self.history + 1 + t)
     for t in range(self.history, self.history + self.n):  # e.g. 4 5 6
       if transition[t - 1].nonterminal:
         transition[t] = self.transitions.get(idx - self.history + 1 + t)
       else:
-        transition[t] = blank_trans  # If prev (next) frame is terminal
+        transition[t] = self.blank_trans  # If prev (next) frame is terminal
     return transition
 
   # Returns a valid sample from a segment
