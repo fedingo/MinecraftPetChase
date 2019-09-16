@@ -126,18 +126,18 @@ else:
     mem.append(state1, action1, reward, done)  # Append transition to memory
     mem.append(state2, action2, reward, done)
 
+    if T % args.evaluation_interval == 0:
+      dqn.eval()  # Set DQN (online network) to evaluation mode
+      avg_reward, avg_Q = test(args, T, dqn, val_mem, metrics, results_dir)  # Test
+      log('T = ' + str(T) + ' / ' + str(args.T_max) + ' | Avg. reward: ' + str(avg_reward) + ' | Avg. Q: ' + str(avg_Q))
+      dqn.train()  # Set DQN (online network) back to training mode
+
     # Train and test
     if T >= args.learn_start:
       mem.priority_weight = min(mem.priority_weight + priority_weight_increase, 1)  # Anneal importance sampling weight β to 1
 
       if T % args.replay_frequency == 0:
         dqn.learn(mem)  # Train with n-step distributional double-Q learning
-
-      if T % args.evaluation_interval == 0:
-        dqn.eval()  # Set DQN (online network) to evaluation mode
-        avg_reward, avg_Q = test(args, T, dqn, val_mem, metrics, results_dir)  # Test
-        log('T = ' + str(T) + ' / ' + str(args.T_max) + ' | Avg. reward: ' + str(avg_reward) + ' | Avg. Q: ' + str(avg_Q))
-        dqn.train()  # Set DQN (online network) back to training mode
 
       # Update target network
       if T % args.target_update == 0:

@@ -38,9 +38,6 @@ class Env():
     map.insert(0, wall)
     map.append(wall)
 
-    for row in map:
-      print(row)
-
     if args.game == "1_player":
       self.env = Minecraft_Env(map, single_player=True)
     else:
