@@ -8,6 +8,7 @@ import torch
 
 from agent import Agent
 from CustomEnv import Env
+from CustmmEnv_2 import Nav_Env
 from memory import ReplayMemory
 from test import test
 from tqdm import tqdm
@@ -50,6 +51,7 @@ parser.add_argument('--evaluation-size', type=int, default=500, metavar='N', hel
 parser.add_argument('--render', default=False, action='store_true', help='Display screen (testing only)')
 parser.add_argument('--enable-cudnn', action='store_true', help='Enable cuDNN (faster but nondeterministic)')
 parser.add_argument('--env-size', type=int, default=8, help='Dimensions of the environment')
+parser.add_argument('--obstacles', type=int, default=0, help='Number of obstacles in the environment')
 
 
 
@@ -78,7 +80,10 @@ def log(s):
 
 
 # Environment
-env = Env(args)
+if args.game == "navigation":
+  env = Nav_Env(args)
+else:
+  env = Env(args)
 env.train()
 action_space = env.action_space()
 
