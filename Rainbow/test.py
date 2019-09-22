@@ -40,7 +40,7 @@ def test(args, T, dqn, val_mem, metrics, results_dir, evaluate=False):
     T_Qs.append(dqn.evaluate_q(state))
 
   avg_reward, avg_Q = sum(T_rewards) / len(T_rewards), sum(T_Qs) / len(T_Qs)
-  if not evaluate:
+  if True:
     # Save model parameters if improved
     if avg_reward > metrics['best_avg_reward']:
       metrics['best_avg_reward'] = avg_reward
